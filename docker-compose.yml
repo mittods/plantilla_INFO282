@@ -19,7 +19,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: ./Backend/dockerfile
+      dockerfile: ./Backend/Dockerfile
     ports:
       - 4000:4000
     depends_on:
@@ -27,16 +27,23 @@ services:
     
     networks:
       - red
+    environment:
+      - DB_HOST=db_test
+      - DB_PORT=3306
+      - DB_USER=manager_test
+      - DB_PASSWORD=RqoKdtp88Z94v7vL#XKVHPxWdb9dw
+      - DB_NAME=test
 
   frontend:
     build:
       context: ./Frontend
-      dockerfile: dockerfile
+      dockerfile: ./dockerfile
     ports:
       - 3000:3000
-    
     networks:
       - red
+    env_file:
+      - ./Frontend/.env
 
 volumes:
   data:

@@ -7,14 +7,21 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY Backend/package*.json ./
 
+# Instalar netcat (nc) para el wait-for-db.sh
+RUN apt-get update && apt-get install -y netcat
+
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code to the working directory
 COPY Backend ./
 
-# Expose the port defined in the environment variable
-EXPOSE 3000
+# Copiar el script para esperar la base de datos
+COPY Backend/wait-for-db.sh /wait-for-db.sh
+RUN chmod +x /wait-for-db.sh
 
-# Define the command to run your application
-CMD [ "npm", "start" ]
+# Expose the port defined in the environment variable
+EXPOSE 4000
+
+# Usar el script como punto de entrada
+CMD ["/wait-for-db.sh", "npm", "start"]

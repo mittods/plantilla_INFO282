@@ -7,11 +7,11 @@ import { sequelize } from "./persintence/database/database.js";
 async function main() {
   await sequelize.sync({ force: false });
 
-  const ip = process.env.IP || 'localhost';
   const port = process.env.PORT || 4000;
 
-  app.listen(port, ip, () => {
-    console.log(`Server is running on http://${ip}:${port}`);
+  // Escuchar siempre en todas las interfaces (accesible desde fuera del contenedor)
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://0.0.0.0:${port}`);
   });
 }
 
