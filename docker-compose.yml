@@ -1,4 +1,3 @@
-version: '3'
 services:
   db_test:
     image: mariadb
@@ -11,22 +10,21 @@ services:
     volumes:
       - ./Base de datos/test.sql:/docker-entrypoint-initdb.d/init.sql
       - data:/var/lib/mysql
-    ports:
-      - 3306:3306
+
     networks:
-      - red
+      - red_taller_software
 
   backend:
     build:
       context: .
       dockerfile: ./Backend/Dockerfile
-    ports:
-      - 4000:4000
+    
+   
     depends_on:
       - db_test
     
     networks:
-      - red
+      - red_taller_software
     environment:
       - DB_HOST=db_test
       - DB_PORT=3306
@@ -39,16 +37,31 @@ services:
       context: ./Frontend
       dockerfile: ./dockerfile
     ports:
-      - 3000:3000
+      - 3009
     networks:
-      - red
+      - red_taller_software
     env_file:
       - ./Frontend/.env
 
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+    depends_on:
+      - frontend
+    networks:
+      - red_taller_software
 volumes:
   data:
     external: false
 
 networks:
-  red:
-    name: red
+  red_taller_software:
+    external: true

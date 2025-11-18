@@ -7,7 +7,7 @@ import { sequelize } from "./persintence/database/database.js";
 async function main() {
   await sequelize.sync({ force: false });
 
-  const port = process.env.PORT || 4000;
+  const port = process.env.PORT || 4009;
 
   // Escuchar siempre en todas las interfaces (accesible desde fuera del contenedor)
   app.listen(port, '0.0.0.0', () => {
